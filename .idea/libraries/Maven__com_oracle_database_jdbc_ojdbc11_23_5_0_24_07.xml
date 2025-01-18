@@ -1,0 +1,13 @@
+<component name="libraryTable">
+  <library name="Maven: com.oracle.database.jdbc:ojdbc11:23.5.0.24.07">
+    <CLASSES>
+      <root url="jar://$MAVEN_REPOSITORY$/com/oracle/database/jdbc/ojdbc11/23.5.0.24.07/ojdbc11-23.5.0.24.07.jar!/" />
+    </CLASSES>
+    <JAVADOC>
+      <root url="jar://$MAVEN_REPOSITORY$/com/oracle/database/jdbc/ojdbc11/23.5.0.24.07/ojdbc11-23.5.0.24.07-javadoc.jar!/" />
+    </JAVADOC>
+    <SOURCES>
+      <root url="jar://$MAVEN_REPOSITORY$/com/oracle/database/jdbc/ojdbc11/23.5.0.24.07/ojdbc11-23.5.0.24.07-sources.jar!/" />
+    </SOURCES>
+  </library>
+</component>
