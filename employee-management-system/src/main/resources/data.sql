@@ -36,3 +36,4 @@ CREATE TABLE audit_log (
     performed_by VARCHAR(100),
     timestamp TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
+:
