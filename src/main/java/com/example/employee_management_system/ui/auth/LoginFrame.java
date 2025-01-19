@@ -2,7 +2,6 @@ package com.example.employee_management_system.ui.auth;
 
 import com.example.employee_management_system.ui.main.MainFrame;
 import okhttp3.*;
-
 import javax.swing.*;
 import java.awt.*;
 import java.io.IOException;
@@ -12,11 +11,12 @@ public class LoginFrame extends JFrame {
     private JTextField usernameField;
     private JPasswordField passwordField;
     private JLabel messageLabel;
+
     private static final String LOGIN_URL = "http://localhost:8080/api/auth/login";
 
     public LoginFrame() {
         setTitle("Employee Management System - Login");
-        setSize(400, 300);
+        setSize(600, 400);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
         setResizable(false);
@@ -46,6 +46,7 @@ public class LoginFrame extends JFrame {
         // Username field
         gbc.gridx = 0;
         gbc.gridy = 0;
+        gbc.anchor = GridBagConstraints.WEST;
         formPanel.add(new JLabel("Username:"), gbc);
 
         gbc.gridx = 1;
@@ -62,7 +63,7 @@ public class LoginFrame extends JFrame {
         formPanel.add(passwordField, gbc);
 
         // Buttons panel
-        JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 10, 10));
+        JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 10, 0));
         JButton loginButton = new JButton("Login");
         JButton cancelButton = new JButton("Cancel");
 
@@ -70,19 +71,27 @@ public class LoginFrame extends JFrame {
         buttonPanel.add(cancelButton);
         mainPanel.add(buttonPanel, BorderLayout.SOUTH);
 
-        // Add action listeners
-        loginButton.addActionListener(e -> performLogin());
-        cancelButton.addActionListener(e -> System.exit(0));
-
-        // Message label for feedback
-        messageLabel = new JLabel("", JLabel.CENTER);
+        // Message label
+        messageLabel = new JLabel(" ", JLabel.CENTER);
         messageLabel.setForeground(Color.RED);
-        mainPanel.add(messageLabel, BorderLayout.NORTH);
+        mainPanel.add(messageLabel, BorderLayout.SOUTH);
+
+        // Add action listeners for buttons
+        loginButton.addActionListener(e -> performLogin());
+        cancelButton.addActionListener(e -> System.exit(0)); // Close the app when "Cancel" is clicked
     }
+
+
+
 
     private void performLogin() {
         String username = usernameField.getText();
         String password = new String(passwordField.getPassword());
+
+        if (username.isEmpty() || password.isEmpty()) {
+            messageLabel.setText("Username and password cannot be empty.");
+            return;
+        }
 
         OkHttpClient client = new OkHttpClient();
         MediaType JSON = MediaType.parse("application/json; charset=utf-8");
@@ -98,20 +107,26 @@ public class LoginFrame extends JFrame {
         client.newCall(request).enqueue(new Callback() {
             @Override
             public void onFailure(Call call, IOException e) {
-                SwingUtilities.invokeLater(() -> messageLabel.setText("Error: " + e.getMessage()));
+                SwingUtilities.invokeLater(() -> messageLabel.setText("Error: Unable to connect to server."));
             }
 
             @Override
             public void onResponse(Call call, Response response) throws IOException {
-                String role = response.body().string();
-                if (response.isSuccessful()) {
-                    SwingUtilities.invokeLater(() -> {
-                        JOptionPane.showMessageDialog(LoginFrame.this, "Welcome, " + role + "!");
-                        dispose();
-                        new MainFrame(role).setVisible(true); // Pass the role to MainFrame
-                    });
-                } else {
-                    SwingUtilities.invokeLater(() -> messageLabel.setText("Invalid username or password."));
+                try {
+                    if (response.isSuccessful()) {
+                        String role = response.body().string();
+                        SwingUtilities.invokeLater(() -> {
+                            JOptionPane.showMessageDialog(LoginFrame.this, "Welcome, " + role + "!");
+                            dispose();
+                            MainFrame mainFrame = new MainFrame();
+                            mainFrame.setRole(role); // Inject the role
+                            mainFrame.setVisible(true);
+                        });
+                    } else {
+                        SwingUtilities.invokeLater(() -> messageLabel.setText("Invalid username or password."));
+                    }
+                } finally {
+                    response.close();
                 }
             }
         });

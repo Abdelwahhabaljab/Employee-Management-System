@@ -18,7 +18,7 @@ VALUES
 -- Création d'un utilisateur MANAGER avec son rôle directement
 INSERT INTO user (username, password, role_id)
 VALUES
-('manager_user', '$2a$12$YyIRb.uaOWbFJe6YylN3IOQk9udcrYrvb2bwm7.k/C1pNaTYMnyk6',
+('manager_user', '$2a$12$MlR4d3Ih75BkQF7Q4uJ/deAi.c/87Ifnop6Yjh8acgZE.wBbINrlq',
 (SELECT id FROM role WHERE name = 'MANAGER'));  -- Mot de passe: "manager123" (chiffré)
 
 -- Création des employés
